@@ -1,0 +1,6 @@
+- Send a push-up notification to a mobile
+- Send an Email to my mails addresses
+- Make it run on start
+- If no answer: send a text to a list of mails // Execute some commands on my linux
+- make it run on Windows and Linux
+- Use my own SMTP server
