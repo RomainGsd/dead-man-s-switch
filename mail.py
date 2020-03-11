@@ -21,6 +21,7 @@ class Mail:
             self._smtp_server = params[2]
             self._checkup_email = params[3]
             self._sender_email = params[4]
+            self._alarm_email = params[5]
 
     def send_checkup(self, mail_id):
         message = MIMEMultipart("alternative")
@@ -40,3 +41,21 @@ class Mail:
             server.quit()
             print("> Checkup mail send")
             print("> Waiting for user to answer...")
+
+    def send_alarm(self):
+        message = MIMEMultipart("alternative")
+        message["Subject"] = "Romain isn't responding since 48h"
+        message["From"] = self._sender_email
+        message["To"] = self._alarm_email
+        text = """\
+        Romain hasn't responded to its deadman's switch since 48 hours.
+        He wanted to share this with you if it has to happend:
+        Bee me, me bee"""
+
+        message.attach(MIMEText(text, "plain"))
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL(self._smtp_server, self._port, context=context) as server:
+            server.login(self._user, self._password)
+            server.sendmail(self._sender_email, self._alarm_email, message.as_string())
+            server.quit()
+            print("> Alarm mail send, goodbye")
