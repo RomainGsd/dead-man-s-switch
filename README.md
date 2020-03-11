@@ -9,5 +9,6 @@ As said on [deadman.io](http://www.deadman.io/):
 
 ## Instructions
 ### Credentials file
-You must have a file named *credentials* at the root of the server
-You can find an example in named as *credentials_example.md*
+You must have a file named *credentials* at the root of the server.
+
+You can find an example in named as *credentials_example.md*.

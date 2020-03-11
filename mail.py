@@ -22,14 +22,15 @@ class Mail:
             self._checkup_email = params[3]
             self._sender_email = params[4]
 
-    def send_checkup(self):
+    def send_checkup(self, mail_id):
         message = MIMEMultipart("alternative")
         message["Subject"] = "Hello, friend"
         message["From"] = self._sender_email
         message["To"] = self._checkup_email
         text = """\
         I would like to know if you are ok.
-        You have 48h to click on this link: http://localhost:8080/alive002"""
+        You have 48h to click on this link:
+        http://localhost:8080/alive=""" + mail_id + ".html"
 
         message.attach(MIMEText(text, "plain"))
         context = ssl.create_default_context()

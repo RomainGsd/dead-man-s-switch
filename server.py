@@ -7,23 +7,57 @@
 import http.server
 import socketserver
 import os
+import secrets
+from time import sleep
 from mail import Mail
+from datetime import datetime, timedelta
+
+ANSWERED = False
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
+    _id = ""
 
     def do_GET(self):
-        if self.path == "/alive002":
+        if self.path == "/alive=" + self._id + ".html":
+            global ANSWERED
+            ANSWERED = True
             self.send_response(302)
-            self.send_header('Location', "/")
+            self.send_header('Location', "/index.html")
             self.end_headers()
             print("> User answered")
         return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 class MyTCPServer(socketserver.TCPServer):
+    _is_send = False
+    _curr_date = datetime.now()
+    #First checkup is 30 seconds after server's start
+    _run_date = _curr_date + timedelta(seconds=30)
+
     def service_actions(self):
-        print("> Do actions")
-        #checkmail = Mail("Checkup")
-        #checkmail.send_checkup(id)
+        global ANSWERED
+        if (not self._is_send or ANSWERED):
+            while self._curr_date < self._run_date:
+                sleep(2)
+                self._curr_date = datetime.now()
+            #Remove the generated file corresponding to the previous id
+            to_delete = "alive=" + self.RequestHandlerClass._id + ".html"
+            os.remove(to_delete) if (os.path.isfile(to_delete)) else None
+
+            #Generate an url token
+            self.RequestHandlerClass._id = secrets.token_urlsafe(32)
+
+            #Generate a file where user arrive before being redirected to index.html
+            with open("alive="+self.RequestHandlerClass._id + ".html", "w+"):
+                print("> Generated html page linked to token")
+
+            #Send Checkup Email
+            checkmail = Mail("Checkup")
+            checkmail.send_checkup(self.RequestHandlerClass._id)
+
+            self._is_send = True
+            ANSWERED = False
+            #Setting next checkup in 30 days
+            self._run_date = self._curr_date + timedelta(days=30)
 
 
 class Server:
