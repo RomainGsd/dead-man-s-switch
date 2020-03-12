@@ -7,10 +7,12 @@
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from tools import get_ip
 
 class Mail:
     _port = 465
     _password = _user = _sender_email = _checkup_email = _smtp_server = ""
+    _ip = get_ip()
 
     def __init__(self, what):
         print("> " + what + " mail is about to be send")
@@ -31,7 +33,7 @@ class Mail:
         text = """\
         I would like to know if you are ok.
         You have 48h to click on this link:
-        http://localhost:8080/alive=""" + mail_id + ".html"
+        http://""" + self._ip + ":8080/alive=""" + mail_id + ".html"
 
         message.attach(MIMEText(text, "plain"))
         context = ssl.create_default_context()

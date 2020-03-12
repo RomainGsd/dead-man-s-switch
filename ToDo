@@ -1,3 +1,4 @@
+- Change Localhost to Local IP then public IP
 - clean up function (delete token file, server.close(), ...)
 - Send a push-up notification to a mobile
 - Make it run on start
