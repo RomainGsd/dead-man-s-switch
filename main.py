@@ -11,9 +11,9 @@ import asyncio
 import sys
 
 if __name__=="__main__":
-    print("==================================")
-    print("||\tDead Man's Switch\t||")
-    print("==================================")
+	print("==================================")
+	print("||\tDead Man's Switch\t||")
+	print("==================================")
 
-    server = Server()
-    server.run()
+	server = Server()
+	server.run()
