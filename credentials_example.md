@@ -1,11 +1,17 @@
-Mail sender account username: *stanleyparable*
+In order to write this credentials file you will need :
 
-Mail sender account password: *mysecretpassword*
+- Mail sender account username
+- Mail sender account password
+- Mail sender account server address
+- Email address where the checkup mail is sent
+- Email address which send the mails
+- Email address to be alarmed if user does not respond
 
-Mail sender account server address *(for gmail: smtp.gmail.com)*
+It should look like this (without the '\' character):
 
-Email address where the checkup mail is sent: *Jon.Osterman@gmail.com*
-
-Email address which send the mails: *hellofriend@wanadoo.com*
-
-Email address to be alarmed if user does not respond: *iamanexample@protonmail.com*
+stanleyparable \
+mysecretpassword \
+smtp.gmail.com \
+Jon.Osterman@gmail.com \
+hellofriend@wanadoo.com \
+iamanexample@protonmail.com \

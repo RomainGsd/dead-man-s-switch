@@ -16,14 +16,20 @@ class Mail:
 
 	def __init__(self, what):
 		print("> " + what + " mail is about to be send")
-		with open("../credentials", "r") as fd:
-			params = fd.read().splitlines()
-			self._user = params[0]
-			self._password = params[1]
-			self._smtp_server = params[2]
-			self._checkup_email = params[3]
-			self._sender_email = params[4]
-			self._alarm_email = params[5]
+		try:
+			with open("../credentials", "r") as fd:
+				params = fd.read().splitlines()
+				self._user = params[0]
+				self._password = params[1]
+				self._smtp_server = params[2]
+				self._checkup_email = params[3]
+				self._sender_email = params[4]
+				self._alarm_email = params[5]
+		except FileNotFoundError:
+			print("No credentials file, check credentials_example.md")
+			print("Exiting...")
+		finally:
+			exit()
 
 	def send_checkup(self, mail_id):
 		message = MIMEMultipart("alternative")
