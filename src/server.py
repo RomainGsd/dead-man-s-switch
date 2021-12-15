@@ -1,7 +1,7 @@
 ##
 ## File:    server.py
 ## Date:    9 March 2020
-## Author:  Romain Goasdoué
+## Author:  Romain Gsd
 ##
 
 import http.server
@@ -40,7 +40,7 @@ class MyTCPServer(socketserver.TCPServer):
 		self._curr_date = datetime.now()
 
 		if (self._curr_date > self._to_answer_date):
-			print("> Too late to answer, sending data to your family...")
+			print("> Too late to answer, sending data to your contact...")
 			#Remove the generated file corresponding to the previous token
 			to_delete = "alive=" + self.RequestHandlerClass._id + ".html"
 			os.remove(to_delete) if (os.path.isfile(to_delete)) else None
@@ -84,7 +84,7 @@ class Server:
 	def __init__(self, port=8080):
 		print("> Initializing server...")
 		self._port = port
-		self._web_dir = os.path.join(os.path.dirname(__file__), 'web')
+		self._web_dir = os.path.join(os.path.dirname(__file__), '../web')
 
 	def run(self):
 		Handler = MyHandler

@@ -1,7 +1,7 @@
 ##
 ## File:    server.py
 ## Date:    8 march 2020
-## Author:  Romain Goasdoué
+## Author:  Romain Gsd
 ##
 
 from typing import overload

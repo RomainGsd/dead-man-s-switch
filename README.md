@@ -11,4 +11,9 @@ As said on [deadman.io](http://www.deadman.io/):
 ### Credentials file
 You must have a file named *credentials* at the root of the server.
 
-You can find an example in named as *credentials_example.md*.
+You can find an explanation in *credentials_howto* and an example in *credentials*.
+
+### Build the docker image
+> docker build -t dms .
+>
+> docker run -d dms

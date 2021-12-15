@@ -1,7 +1,7 @@
 ##
 ## File:    tools.py
 ## Date:    12 March 2020
-## Author:  Romain Goasdoué
+## Author:  Romain Gsd
 ##
 
 import requests

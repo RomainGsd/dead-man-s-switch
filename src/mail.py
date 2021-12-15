@@ -1,7 +1,7 @@
 ##
 ## File:    mail.py
 ## Date:    8 March 2020
-## Author:  Romain Goasdoué
+## Author:  Romain Gsd
 ##
 
 import smtplib, ssl
@@ -28,8 +28,10 @@ class Mail:
 		except FileNotFoundError:
 			print("No credentials file, check credentials_example.md")
 			print("Exiting...")
+		except:
+			print("[Error] Mail init")
 		finally:
-			exit()
+			exit(0)
 
 	def send_checkup(self, mail_id):
 		message = MIMEMultipart("alternative")
@@ -37,33 +39,42 @@ class Mail:
 		message["From"] = self._sender_email
 		message["To"] = self._checkup_email
 		text = """\
-		I would like to know if you are ok.
+		DMS Checkup.
 		You have 48h to click on this link:
 		http://""" + self._ip + ":8080/alive=""" + mail_id + ".html"
 
 		message.attach(MIMEText(text, "plain"))
 		context = ssl.create_default_context()
-		with smtplib.SMTP_SSL(self._smtp_server, self._port, context=context) as server:
-			server.login(self._user, self._password)
-			server.sendmail(self._sender_email, self._checkup_email, message.as_string())
-			server.quit()
+		with smtplib.SMTP_SSL(self._smtp_server, self._port, context=context) as smtpserver:
+			try:
+				ret = smtpserver.login(self._user, self._password)
+			except SMTPException:
+				print("[FATAL] Mail server login failed")
+				exit(0)
+			ret = smtpserver.sendmail(self._sender_email, self._checkup_email, message.as_string())
+			print(ret)
+			smtpserver.quit()
 			print("> Checkup mail send")
 			print("> Waiting for user to answer...")
 
 	def send_alarm(self):
 		message = MIMEMultipart("alternative")
-		message["Subject"] = "Romain isn't responding since 48h"
+		message["Subject"] = self._user + " isn't responding since 48h"
 		message["From"] = self._sender_email
 		message["To"] = self._alarm_email
-		text = """\
-		Romain hasn't responded to its deadman's switch since 48 hours.
+		text = "\
+		" + self._user + """ hasn't responded to its deadman's switch since 48 hours.
 		He wanted to share this with you if it has to happend:
-		Bee me, me bee"""
+		Be me, me bee"""
 
 		message.attach(MIMEText(text, "plain"))
 		context = ssl.create_default_context()
 		with smtplib.SMTP_SSL(self._smtp_server, self._port, context=context) as server:
-			server.login(self._user, self._password)
+			try:
+				server.login(self._user, self._password)
+			except:
+				print("[FATAL] Mail server login failed")
+				exit(0)
 			server.sendmail(self._sender_email, self._alarm_email, message.as_string())
 			server.quit()
-			print("> Alarm mail send, goodbye")
+			print("> Alarm mail sent, goodbye")
