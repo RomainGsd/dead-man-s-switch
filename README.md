@@ -9,9 +9,9 @@ As said on [deadman.io](http://www.deadman.io/):
 
 ## Instructions
 ### Credentials file
-You must have a file named *credentials* at the root of the server.
+You must have a file named *mail_parameters.json* at the root of the server.
 
-You can find an explanation in *credentials_howto* and an example in *credentials*.
+You can find an explanation in *parameters_howto* and an example in *mail_parameters.json*.
 
 ### Build the docker image
 > docker build -t dms .

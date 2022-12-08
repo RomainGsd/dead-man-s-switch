@@ -1,0 +1,8 @@
+{
+    "user": "stanleyparable",
+    "password": "mysecretpassword",
+    "smtp_server": "smtp.gmail.com",
+    "checkup_mail": "Jon.Osterman@gmail.com",
+    "sender_mail": "hellofriend@wanadoo.com",
+    "alarm_mail": "iamanexample@protonmail.com"
+}

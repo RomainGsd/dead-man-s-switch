@@ -9,6 +9,7 @@ import socketserver
 import os
 import secrets
 import asyncio
+import logging as log
 from time import sleep
 from mail import Mail
 from datetime import datetime, timedelta
@@ -25,7 +26,7 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
 			self.send_response(302)
 			self.send_header('Location', "/index.html")
 			self.end_headers()
-			print("> User answered, see you in one month")
+			log.debug("> User answered, see you in one month")
 		return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 class MyTCPServer(socketserver.TCPServer):
@@ -40,7 +41,7 @@ class MyTCPServer(socketserver.TCPServer):
 		self._curr_date = datetime.now()
 
 		if (self._curr_date > self._to_answer_date):
-			print("> Too late to answer, sending data to your contact...")
+			log.debug("> Too late to answer, sending data to your contact...")
 			#Remove the generated file corresponding to the previous token
 			to_delete = "alive=" + self.RequestHandlerClass._id + ".html"
 			os.remove(to_delete) if (os.path.isfile(to_delete)) else None
@@ -55,7 +56,7 @@ class MyTCPServer(socketserver.TCPServer):
 
 			#Waiting for date to correspond to next checkup
 			while self._curr_date < self._next_checkup_date:
-				#sleep(2)
+				sleep(2)
 				self._curr_date = datetime.now()
 
 			#Generate an url token
@@ -63,7 +64,7 @@ class MyTCPServer(socketserver.TCPServer):
 
 			#Generate a file where user arrive before being redirected to index.html
 			with open("alive="+self.RequestHandlerClass._id + ".html", "w+"):
-				print("> Generated html page linked to token")
+				log.debug("> Generated html page linked to token")
 
 			#Send Checkup Email
 			checkmail = Mail("Checkup")
@@ -82,7 +83,7 @@ class Server:
 	_web_dir = ""
 
 	def __init__(self, port=8080):
-		print("> Initializing server...")
+		log.debug("> Initializing server...")
 		self._port = port
 		self._web_dir = os.path.join(os.path.dirname(__file__), '../web')
 
@@ -91,8 +92,8 @@ class Server:
 		os.chdir(self._web_dir) #We change dir to 'web' folder
 
 		with MyTCPServer(("", self._port), Handler) as httpd:
-			print("> Serving at port", self._port)
-			print("> First checkup will run in 10 seconds")
+			log.debug("> Serving at port %d", self._port)
+			log.debug("> First checkup will run in 10 seconds")
 			try:
 				httpd.serve_forever()
 			except KeyboardInterrupt: pass; httpd.server_close()

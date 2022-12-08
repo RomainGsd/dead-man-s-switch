@@ -5,6 +5,8 @@
 ##
 
 import smtplib, ssl
+import logging as log
+import json
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from tools import get_ip
@@ -15,22 +17,22 @@ class Mail:
 	_ip = get_ip()
 
 	def __init__(self, what):
-		print("> " + what + " mail is about to be send")
+		log.debug("> %s mail is about to be send", what)
 		try:
-			with open("../credentials", "r") as fd:
-				params = fd.read().splitlines()
-				self._user = params[0]
-				self._password = params[1]
-				self._smtp_server = params[2]
-				self._checkup_email = params[3]
-				self._sender_email = params[4]
-				self._alarm_email = params[5]
+			with open("../mail_parameters.json", "r") as params_fd:
+				params = json.load(params_fd)
+				self._user = params["user"]
+				self._password = params["password"]
+				self._smtp_server = params["smtp_server"]
+				self._checkup_email = params["checkup_mail"]
+				self._sender_email = params["sender_mail"]
+				self._alarm_email = params["alarm_mail"]
 		except FileNotFoundError:
-			print("No credentials file, check credentials_example.md")
-			print("Exiting...")
+			log.error("No parameters file, check parameters_howto.md")
+			log.debug("Exiting...")
+			exit(0)
 		except:
-			print("[Error] Mail init")
-		finally:
+			log.error("[Error] Mail init")
 			exit(0)
 
 	def send_checkup(self, mail_id):
@@ -38,8 +40,9 @@ class Mail:
 		message["Subject"] = "Hello, friend"
 		message["From"] = self._sender_email
 		message["To"] = self._checkup_email
-		text = """\
-		DMS Checkup.
+		text = """
+		DeadMan's Switch Checkup.
+		=========================
 		You have 48h to click on this link:
 		http://""" + self._ip + ":8080/alive=""" + mail_id + ".html"
 
@@ -48,14 +51,14 @@ class Mail:
 		with smtplib.SMTP_SSL(self._smtp_server, self._port, context=context) as smtpserver:
 			try:
 				ret = smtpserver.login(self._user, self._password)
-			except SMTPException:
-				print("[FATAL] Mail server login failed")
+			except smtplib.SMTPAuthenticationError:
+				log.fatal("[FATAL] Mail server login failed")
 				exit(0)
 			ret = smtpserver.sendmail(self._sender_email, self._checkup_email, message.as_string())
-			print(ret)
+			log.debug("%s", ret)
 			smtpserver.quit()
-			print("> Checkup mail send")
-			print("> Waiting for user to answer...")
+			log.debug("> Checkup mail send")
+			log.debug("> Waiting for user to answer...")
 
 	def send_alarm(self):
 		message = MIMEMultipart("alternative")
@@ -73,8 +76,8 @@ class Mail:
 			try:
 				server.login(self._user, self._password)
 			except:
-				print("[FATAL] Mail server login failed")
+				log.fatal("[FATAL] Mail server login failed")
 				exit(0)
 			server.sendmail(self._sender_email, self._alarm_email, message.as_string())
 			server.quit()
-			print("> Alarm mail sent, goodbye")
+			log.debug("> Alarm mail sent, goodbye")
