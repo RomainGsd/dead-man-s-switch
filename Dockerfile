@@ -1,17 +1,18 @@
 FROM python:3.9-alpine
 
-RUN mkdir -p /opt/dms/
-RUN adduser -D dms
-RUN chown -R dms /opt/dms
+RUN mkdir -p /opt/dms/ && \
+ adduser -D dms && \
+ chown -R dms /opt/dms
+
 USER dms
 
 COPY --chown=dms requirements.txt /opt/dms/
-RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --user -r /opt/dms/requirements.txt
-RUN export PATH=$PATH:/home/dms/.local/bin
 
 COPY --chown=dms . /opt/dms
 WORKDIR /opt/dms
+
+RUN export PATH="$PATH":/home/dms/.local/bin
 
 LABEL maintainer="RomainGsd" \
         version="1.0"
