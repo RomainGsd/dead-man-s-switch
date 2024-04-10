@@ -8,16 +8,15 @@ import http.server
 import socketserver
 import os
 import secrets
-import asyncio
 import logging as log
 from time import sleep
 from mail import Mail
 from datetime import datetime, timedelta
 
-ANSWERED = False
+ANSWERED : bool = False
 
 class MyHandler(http.server.SimpleHTTPRequestHandler):
-	_id = ""
+	_id : str = ""
 
 	def do_GET(self):
 		if self.path == "/alive=" + self._id + ".html":
@@ -82,10 +81,10 @@ class Server:
 	_port = 8080
 	_web_dir = ""
 
-	def __init__(self, port=8080):
+	def __init__(self, port: int =8080):
 		log.debug("> Initializing server...")
-		self._port = port
-		self._web_dir = os.path.join(os.path.dirname(__file__), '../web')
+		self._port : int = port
+		self._web_dir : str = os.path.join(os.path.dirname(__file__), '../web')
 
 	def run(self):
 		Handler = MyHandler
@@ -96,4 +95,6 @@ class Server:
 			log.debug("> First checkup will run in 10 seconds")
 			try:
 				httpd.serve_forever()
-			except KeyboardInterrupt: pass; httpd.server_close()
+			except KeyboardInterrupt: 
+				httpd.server_close()
+				pass

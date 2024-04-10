@@ -3,4 +3,3 @@
 - clean up function (delete token file, server.close(), ...)
 - Send a push-up notification to a mobile
 - Make it run on start
-- make it run on Windows and Linux

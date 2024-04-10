@@ -4,12 +4,8 @@
 ## Author:  Romain Gsd
 ##
 
-from typing import overload
-from mail import Mail
 from server import Server
 import logging as log
-import asyncio
-import sys
 
 log.basicConfig(level=log.DEBUG)
 

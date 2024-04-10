@@ -1,13 +1,13 @@
-FROM python:3.9-alpine
+FROM python:3.9
 
 RUN mkdir -p /opt/dms/ && \
- adduser -D dms && \
+ useradd -ms /bin/bash dms && \
  chown -R dms /opt/dms
 
 USER dms
 
 COPY --chown=dms requirements.txt /opt/dms/
-RUN pip install --no-cache-dir --user -r /opt/dms/requirements.txt
+RUN pip3 install --no-cache-dir --user -r /opt/dms/requirements.txt
 
 COPY --chown=dms . /opt/dms
 WORKDIR /opt/dms
@@ -15,6 +15,6 @@ WORKDIR /opt/dms
 RUN export PATH="$PATH":/home/dms/.local/bin
 
 LABEL maintainer="RomainGsd" \
-        version="1.0"
+        version="1.0.0"
 
 CMD ["python3", "src/main.py"]
