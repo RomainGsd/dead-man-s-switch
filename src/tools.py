@@ -6,7 +6,8 @@
 
 import requests
 
+
 def get_ip():
-	f = requests.request('GET', 'http://myip.dnsomatic.com')
-	ip = f.text
-	return ip
+    f = requests.request('GET', 'http://myip.dnsomatic.com')
+    ip = f.text
+    return ip

@@ -4,15 +4,16 @@
 ## Author:  Romain Gsd
 ##
 
-from server import Server
 import logging as log
+
+from server import Server
 
 log.basicConfig(level=log.DEBUG)
 
-if __name__=="__main__":
-	log.info("==================================")
-	log.info("||\tDead Man's Switch\t||")
-	log.info("==================================")
+if __name__ == '__main__':
+    log.info('==================================')
+    log.info("||\tDead Man's Switch\t||")
+    log.info('==================================')
 
-	server = Server()
-	server.run()
+    server = Server()
+    server.run()
